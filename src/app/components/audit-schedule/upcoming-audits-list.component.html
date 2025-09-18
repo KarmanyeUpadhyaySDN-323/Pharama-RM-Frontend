@@ -110,4 +110,11 @@
       </app-scroll-area>
     </app-card-content>
   </app-card>
+
+  <!-- Schedule Audit Modal -->
+  <app-schedule-audit-modal
+    [isOpen]="isScheduleModalOpen"
+    (onClose)="onScheduleModalClose()"
+    (onSubmit)="onScheduleModalSubmit($event)">
+  </app-schedule-audit-modal>
 </div>
