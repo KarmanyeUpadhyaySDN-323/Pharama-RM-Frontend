@@ -1,0 +1,134 @@
+<div class="supplier-list-section">
+  <!-- Header with Search and Filters -->
+  <div class="supplier-list-header">
+    <div class="supplier-list-filters">
+      <div class="search-container">
+        <div class="search-icon">🔍</div>
+        <app-input
+          placeholder="Search by name or type..."
+          [value]="searchTerm"
+          (onInput)="onSearchChange($event)"
+          className="search-input">
+        </app-input>
+      </div>
+      <div class="filter-container">
+        <app-select [value]="filterType">
+          <app-select-trigger placeholder="Filter by type" className="filter-select">
+            {{ filterType === 'all' ? 'All Types' : filterType }}
+          </app-select-trigger>
+          <app-select-content>
+            <app-select-item value="all" (click)="onFilterChange('all')">All Types</app-select-item>
+            <app-select-item value="API Manufacturer" (click)="onFilterChange('API Manufacturer')">API Manufacturer</app-select-item>
+            <app-select-item value="Excipient Supplier" (click)="onFilterChange('Excipient Supplier')">Excipient Supplier</app-select-item>
+            <app-select-item value="Packaging Supplier" (click)="onFilterChange('Packaging Supplier')">Packaging Supplier</app-select-item>
+            <app-select-item value="Raw Material Supplier" (click)="onFilterChange('Raw Material Supplier')">Raw Material Supplier</app-select-item>
+          </app-select-content>
+        </app-select>
+      </div>
+    </div>
+    <app-button
+      variant="default"
+      (onClick)="onAddSupplier()"
+      className="add-supplier-button">
+      <span class="button-content">
+        <span class="button-icon">+</span>
+        <span>Add New Supplier</span>
+      </span>
+    </app-button>
+  </div>
+
+  <!-- Supplier List -->
+  <app-card>
+    <app-card-header>
+      <app-card-title>Suppliers ({{ filteredSuppliers.length }})</app-card-title>
+    </app-card-header>
+    <app-card-content>
+      <app-scroll-area className="h-96">
+        <div class="supplier-list">
+          <div
+            *ngFor="let supplier of filteredSuppliers; trackBy: trackBySupplierId"
+            class="supplier-card">
+            <div class="supplier-card-header">
+              <div class="supplier-details">
+                <div class="supplier-title-row">
+                  <h4 class="supplier-name">{{ supplier.name }}</h4>
+                  <app-badge [variant]="getComplianceBadgeVariant(supplier.compliance)">
+                    {{ getComplianceBadgeText(supplier.compliance) }}
+                  </app-badge>
+                  <app-badge
+                    [variant]="getRiskBadgeVariant(supplier.riskLevel)"
+                    [className]="getRiskBadgeClass(supplier.riskLevel)">
+                    {{ getRiskBadgeText(supplier.riskLevel) }}
+                  </app-badge>
+                </div>
+                <p class="supplier-type">{{ supplier.type }}</p>
+              </div>
+            </div>
+
+            <div class="supplier-info-grid">
+              <div class="supplier-info-item">
+                <div class="info-icon">📍</div>
+                <span class="info-text">{{ supplier.location }}</span>
+              </div>
+              <div class="supplier-info-item">
+                <div class="info-icon">📞</div>
+                <span class="info-text">{{ supplier.contact }}</span>
+              </div>
+              <div class="supplier-info-item">
+                <div class="info-icon">🏆</div>
+                <span class="info-text">{{ supplier.certificate }}</span>
+              </div>
+            </div>
+
+            <div class="supplier-audit-info">
+              Last audit: {{ getFormattedDate(supplier.lastAudit) }}
+            </div>
+
+            <div class="supplier-actions">
+              <app-button
+                variant="outline"
+                size="sm"
+                (onClick)="onViewDetails(supplier)"
+                className="supplier-action">
+                <span class="action-content">
+                  <span class="action-icon">👁️</span>
+                  <span>View Details</span>
+                </span>
+              </app-button>
+              <app-button
+                variant="outline"
+                size="sm"
+                (onClick)="onContact(supplier)"
+                className="supplier-action">
+                <span class="action-content">
+                  <span class="action-icon">📞</span>
+                  <span>Contact</span>
+                </span>
+              </app-button>
+              <app-button
+                variant="outline"
+                size="sm"
+                (onClick)="onScheduleAudit(supplier)"
+                className="supplier-action">
+                <span class="action-content">
+                  <span class="action-icon">📅</span>
+                  <span>Schedule Audit</span>
+                </span>
+              </app-button>
+              <app-button
+                variant="outline"
+                size="sm"
+                (onClick)="onGenerateReport(supplier)"
+                className="supplier-action">
+                <span class="action-content">
+                  <span class="action-icon">📄</span>
+                  <span>Generate Report</span>
+                </span>
+              </app-button>
+            </div>
+          </div>
+        </div>
+      </app-scroll-area>
+    </app-card-content>
+  </app-card>
+</div>
